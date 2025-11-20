@@ -89,9 +89,9 @@ class AuthService
             config('jwt.ttl'), // 60 minutes
             '/',
             null,
-            false, // Secure (HTTPS only)
-            false, // HttpOnly
-            false,
+            true, // Secure (HTTPS only)
+            true, // HttpOnly
+            true,
             // 'strict' // SameSite
         );
 
@@ -101,9 +101,9 @@ class AuthService
             config('jwt.refresh_ttl'), // 2 weeks
             '/',
             null,
-            false, // Secure (HTTPS only)
-            false, // HttpOnly
-            false,
+            true, // Secure (HTTPS only)
+            true, // HttpOnly
+            true,
             // 'strict'
         );
 
