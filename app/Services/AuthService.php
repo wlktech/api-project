@@ -60,7 +60,7 @@ class AuthService
      * @param string $refreshToken
      * @param User $user
      */
-    public function respondWithToken1($accessToken, $refreshToken = null, $user = null)
+    public function respondWithToken($accessToken, $refreshToken = null, $user = null)
     {
         $data = [
             'access_token' => $accessToken,
@@ -80,7 +80,7 @@ class AuthService
         return $data;
     }
 
-    public function respondWithToken($accessToken, $refreshToken)
+    public function respondWithToken1($accessToken, $refreshToken)
     {
         // Create HttpOnly cookies
         $accessCookie = cookie(
