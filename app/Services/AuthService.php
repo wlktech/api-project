@@ -79,41 +79,4 @@ class AuthService
         }
         return $data;
     }
-
-    public function respondWithToken1($accessToken, $refreshToken)
-    {
-        // Create HttpOnly cookies
-        $accessCookie = cookie(
-            'access_token',
-            $accessToken,
-            config('jwt.ttl'), // 60 minutes
-            '/',
-            null,
-            true, // Secure (HTTPS only)
-            true, // HttpOnly
-            true,
-            // 'strict' // SameSite
-        );
-
-        $refreshCookie = cookie(
-            'refresh_token',
-            $refreshToken,
-            config('jwt.refresh_ttl'), // 2 weeks
-            '/',
-            null,
-            true, // Secure (HTTPS only)
-            true, // HttpOnly
-            true,
-            // 'strict'
-        );
-
-        return response()->json([
-            'message' => 'Success',
-            'access_token' => $accessToken, // Optional: return in body for initial storage
-            'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
-        ])
-        ->withCookie($accessCookie)
-        ->withCookie($refreshCookie);
-    }
 }
