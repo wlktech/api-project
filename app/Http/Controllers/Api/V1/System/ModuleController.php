@@ -24,7 +24,7 @@ class ModuleController extends Controller
     {
         return $this->permissionService->checkPermission('module_list', function() use ($request) {
             $size = (int) $request->get('size', 15);
-            $modules = Module::latest()->paginate($size);
+            $modules = Module::paginate($size);
             return ResponseHelper::paginated($modules,"Modules retrieved successfully.");
         });
     }
