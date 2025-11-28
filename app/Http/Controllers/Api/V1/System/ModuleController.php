@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\System;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Api\System\ModuleRequest;
 use App\Models\Module;
 use App\Models\User;
 use App\Services\PermissionService;
@@ -40,9 +41,16 @@ class ModuleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ModuleRequest $request)
     {
-        //
+        return $this->permissionService->checkPermission('module_create', function() use ($request) {
+            $request->validated();
+            $module = Module::create([
+                'name' => $request->name,
+                'slug' => implode('-', explode(' ', strtolower($request->name))),
+            ]);
+            return ResponseHelper::success($module,"Module created successfully.");
+        });
     }
 
     /**
@@ -64,9 +72,34 @@ class ModuleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ModuleRequest $request, string $id)
     {
-        //
+        return $this->permissionService->checkPermission('module_update', function() use ($request, $id) {
+            $request->validated();
+            $module = Module::find($id);
+            if(!$module){
+                return ResponseHelper::notFound("Module not found.");
+            }
+            $module->update([
+                'name' => $request->name,
+                'slug' => implode('-', explode(' ', strtolower($request->name))),
+            ]);
+            return ResponseHelper::success($module,"Module updated successfully.");
+        });
+    }
+
+    public function statusChange($id)
+    {
+        return $this->permissionService->checkPermission('module_status_change', function() use ($id) {
+            $module = Module::find($id);
+            if(!$module){
+                return ResponseHelper::notFound("Module not found.");
+            }
+            $module->update([
+                'is_active' => !$module->is_active,
+            ]);
+            return ResponseHelper::success($module,"Module status updated successfully.");
+        });
     }
 
     /**
@@ -74,6 +107,13 @@ class ModuleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->permissionService->checkPermission('module_delete', function() use ($id){
+            $module = Module::find($id);
+            if(!$module){
+                return ResponseHelper::notFound("Module not found.");
+            }
+            $module->delete();
+            return ResponseHelper::success($module,"Module deleted successfully.");
+        });
     }
 }
